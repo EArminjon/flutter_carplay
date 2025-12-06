@@ -41,16 +41,31 @@ class FCPTabBarTemplate {
   }
 
   public func updateTemplates(templates: [FCPListTemplate]) {
-    var existingMap = Dictionary(uniqueKeysWithValues: zip(self.objcTemplates.map { $0.elementId }, self.templates))
+      let before = self.objcTemplates.last?.objcSections.last?.objcItems.last
+      NSLog("On log à la main: \(ObjectIdentifier(before!)) \(before?.text) \(before?.completeHandler)")
+    let fcpListTemplate: [String: FCPListTemplate] = Dictionary(uniqueKeysWithValues: self.objcTemplates.map { ($0.elementId, $0) })
+    let cpListTemplate = Dictionary(uniqueKeysWithValues: zip(self.objcTemplates.map { $0.elementId }, self.templates))
 
-    self.objcTemplates = templates
-    self.templates = templates.map { template in
-      if let existing = existingMap[template.elementId] {
-        return existing // reuse existing template
+    /// Keep Flutter CarPlay object if necessary, use new instance.
+    self.objcTemplates = templates.map { template in
+      if let existing = fcpListTemplate[template.elementId] {
+        return existing.merge(with: template) // Merge old instance with newest to keep some data (eg: completeHandler)
       } else {
-        return template.get // create new template
+        return template // Use new instance
       }
     }
+
+    /// Create new CarPlay template if necessary else keep currents.
+    self.templates = templates.map { template in
+      if let existing = cpListTemplate[template.elementId] {
+        return existing // Reuse existing CP template
+      } else {
+        return template.get // New CP template
+      }
+    }
+
+    let item = self.objcTemplates.last?.objcSections.last?.objcItems.last
+    NSLog("On log à la main: \(item?.text) \(item?.completeHandler)")
   }
 }
 
