@@ -18,7 +18,7 @@ class FCPSharedNowPlayingTemplate {
 
 @available(iOS 14.0, *)
 extension FCPSharedNowPlayingTemplate: FCPRootTemplate {
-     var elementId: String {
-         return "FCPSharedNowPlayingTemplate"
-     }
+  var elementId: String {
+    return "FCPSharedNowPlayingTemplate"
+  }
 }

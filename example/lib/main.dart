@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
           detailText: 'Detail Text',
           onPress: (complete, self) {
             self.setDetailText('You can change the detail text.. 🚀');
-            self.setAccessoryType(CPListItemAccessoryTypes.cloud);
+            self.setAccessoryType(CPListItemAccessoryType.cloud);
             Future.delayed(const Duration(seconds: 1), () {
               self.setDetailText('Customizable Detail Text');
               complete();
@@ -85,12 +85,12 @@ class _MyAppState extends State<MyApp> {
               text: 'You can also change the title',
               detailText: 'and detail text while loading',
             );
-            self.setAccessoryType(CPListItemAccessoryTypes.none);
+            self.setAccessoryType(CPListItemAccessoryType.none);
             Future.delayed(const Duration(seconds: 1), () {
               complete();
             });
           },
-          accessoryType: CPListItemAccessoryTypes.disclosureIndicator,
+          accessoryType: CPListItemAccessoryType.disclosureIndicator,
         ),
         CPListItem(text: 'Item 4', detailText: 'Detail Text'),
         CPListItem(text: 'Item 5', detailText: 'Detail Text'),
@@ -462,6 +462,7 @@ class _MyAppState extends State<MyApp> {
               },
             ),
         ],
+        systemIcon: 'systemIcon',
       ),
     );
   }
@@ -682,7 +683,7 @@ class _MyAppState extends State<MyApp> {
             ),
             Center(
               child: Text(
-                'Connection Status: ${EnumUtils.stringFromEnum(connectionStatus)}',
+                'Connection Status: ${connectionStatus.name}',
               ),
             ),
             Row(

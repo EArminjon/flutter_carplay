@@ -8,24 +8,37 @@ import 'package:uuid/uuid.dart';
 
 import '../template.dart';
 
-/// A template object that contains a collection of [CPTemplate] templates,
-/// each of which occupies one tab in the tab bar.
+/// A container template that displays and manages other templates, presenting them as tabs.
 /// Supported template types: [CPListTemplate], [CPPointOfInterestTemplate],
 /// [CPGridTemplate], [CPInformationTemplate], [CPActionSheetTemplate], [CPAlertTemplate]
+/// https://developer.apple.com/documentation/carplay/cptabbartemplate
+/// iOS 14.0+ | iPadOS 14.0+ | Mac Catalyst 14.0+
 class CPTabBarTemplate implements CPTemplate {
   /// Unique id of the object.
   final String _elementId = const Uuid().v4();
 
-  /// A title that describes the content of the tab.
-  ///
-  /// CarPlay only displays the title when the template is a root-template of a tab
-  /// bar, otherwise setting this property has no effect.
-  final String? title;
-
-  /// The templates to show as tabs.
+  /// The tab bar’s templates.
   /// Supported types: [CPListTemplate], [CPPointOfInterestTemplate],
   /// [CPGridTemplate], [CPInformationTemplate]
+  /// iOS 14.0+ | iPadOS 14.0+ | Mac Catalyst 14.0+
   final List<CPTemplate> templates;
+
+  /// A short title that describes the content of the tab.
+  /// iOS 14.0+ | iPadOS 14.0+ | Mac Catalyst 14.0+
+  @override
+  final String? tabTitle;
+
+  /// An indicator you use to call attention to the tab.
+  /// iOS 14.0+ | iPadOS 14.0+ | Mac Catalyst 14.0+
+  @override
+  final bool showsTabBadge;
+
+  /// An image that represents the content of the tab.
+  /// Note:
+  /// - If null, template title will not be display in the tab bar.
+  /// iOS 14.0+ | iPadOS 14.0+ | Mac Catalyst 14.0+
+  @override
+  final String? systemIcon;
 
   /// When creating a [CPTabBarTemplate], provide an array of templates for the tab bar to display.
   /// CarPlay treats the array’s templates as root templates, each with its own
@@ -35,14 +48,20 @@ class CPTabBarTemplate implements CPTemplate {
   ///
   /// [!] You can’t add a tab bar template to an existing navigation hierarchy,
   /// or present one modally.
-  CPTabBarTemplate({this.title, required List<CPTemplate> templates})
-      : templates = List<CPTemplate>.from(templates);
+  CPTabBarTemplate({
+    required List<CPTemplate> templates,
+    this.tabTitle,
+    this.showsTabBadge = false,
+    this.systemIcon,
+  }) : templates = List<CPTemplate>.from(templates);
 
   @override
   Map<String, dynamic> toJson() => {
         '_elementId': _elementId,
-        'title': title,
+        'tabTitle': tabTitle,
         'templates': templates.map((e) => _templateToJson(e)).toList(),
+        'showsTabBadge': showsTabBadge,
+        'systemIcon': systemIcon,
       };
 
   /// Converts a template to JSON with its runtime type identifier.

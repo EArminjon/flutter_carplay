@@ -1,4 +1,3 @@
-import 'package:flutter_carplay/helpers/enum_utils.dart';
 import 'package:uuid/uuid.dart';
 
 enum CPTextButtonStyles { normal, cancel, confirm }
@@ -28,7 +27,7 @@ class CPTextButton {
   Map<String, dynamic> toJson() => {
         '_elementId': _elementId,
         'title': title,
-        'style': EnumUtils.stringFromEnum(style.toString()),
+        'style': style.name,
       };
 
   String get uniqueId {

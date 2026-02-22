@@ -13,8 +13,8 @@ class FCPBarButton {
   private(set) var elementId: String
   private var title: String
   private var style: CPBarButtonStyle
-  
-  init(obj: [String : Any]) {
+
+  init(obj: [String: Any]) {
     self.elementId = obj["_elementId"] as! String
     self.title = obj["title"] as! String
     let style = obj["style"] as? String
@@ -24,13 +24,16 @@ class FCPBarButton {
       self.style = CPBarButtonStyle.none
     }
   }
-  
+
   var get: CPBarButton {
-    let barButton = CPBarButton.init(title: title, handler: { _ in
-      DispatchQueue.main.async {
-        FCPStreamHandlerPlugin.sendEvent(type: FCPChannelTypes.onBarButtonPressed, data: ["elementId": self.elementId])
-      }
-    })
+    let barButton = CPBarButton.init(
+      title: title,
+      handler: { _ in
+        DispatchQueue.main.async {
+          FCPStreamHandlerPlugin.sendEvent(
+            type: FCPChannelTypes.onBarButtonPressed, data: ["elementId": self.elementId])
+        }
+      })
     barButton.buttonStyle = self.style
     self._super = barButton
     return barButton

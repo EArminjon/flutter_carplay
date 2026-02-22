@@ -1,9 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_carplay/constants/private_constants.dart';
 import 'package:flutter_carplay/flutter_carplay.dart';
-import 'package:flutter_carplay/helpers/carplay_helper.dart';
-
-import '../models/template.dart';
 
 /// [FlutterCarPlayController] is an root object in order to control and communication
 /// system with the Apple CarPlay and native functions.
@@ -38,7 +34,7 @@ class FlutterCarPlayController {
     dynamic data,
   ) async {
     final value = await _methodChannel.invokeMethod<bool>(
-      EnumUtils.stringFromEnum(type.toString()),
+      type.name,
       data,
     );
     return value;
@@ -57,7 +53,8 @@ class FlutterCarPlayController {
                 if (t is CPListTemplate) {
                   for (var s in t.sections) {
                     for (var i in s.items) {
-                      if (i.uniqueId == updatedListItem.uniqueId) {
+                      if (i.uniqueId == updatedListItem.uniqueId &&
+                          i is CPListItem) {
                         s.items[s.items.indexOf(i)] = updatedListItem;
                         break l1;
                       }
@@ -69,7 +66,49 @@ class FlutterCarPlayController {
             case CPListTemplate _:
               for (var s in h.sections) {
                 for (var i in s.items) {
-                  if (i.uniqueId == updatedListItem.uniqueId) {
+                  if (i.uniqueId == updatedListItem.uniqueId &&
+                      i is CPListItem) {
+                    s.items[s.items.indexOf(i)] = updatedListItem;
+                    break l1;
+                  }
+                }
+              }
+              break;
+            default:
+          }
+        }
+      }
+    });
+  }
+
+  static void updateCPListImageRowItem(CPListImageRowItem updatedListItem) {
+    _methodChannel.invokeMethod('updateListImageRowItem', <String, dynamic>{
+      ...updatedListItem.toJson(),
+    }).then((value) {
+      if (value) {
+        l1:
+        for (var h in templateHistory) {
+          switch (h) {
+            case CPTabBarTemplate _:
+              for (var t in h.templates) {
+                if (t is CPListTemplate) {
+                  for (var s in t.sections) {
+                    for (var i in s.items) {
+                      if (i.uniqueId == updatedListItem.uniqueId &&
+                          i is CPListImageRowItem) {
+                        s.items[s.items.indexOf(i)] = updatedListItem;
+                        break l1;
+                      }
+                    }
+                  }
+                }
+              }
+              break;
+            case CPListTemplate _:
+              for (var s in h.sections) {
+                for (var i in s.items) {
+                  if (i.uniqueId == updatedListItem.uniqueId &&
+                      i is CPListImageRowItem) {
                     s.items[s.items.indexOf(i)] = updatedListItem;
                     break l1;
                   }
@@ -96,17 +135,56 @@ class FlutterCarPlayController {
   }
 
   void processFCPListItemSelectedChannel(String elementId) {
-    final CPListItem? listItem = _carplayHelper.findCPListItem(
+    final item = _carplayHelper.findCPListTemplateItem(
       templates: templateHistory,
       elementId: elementId,
     );
-    if (listItem != null) {
-      listItem.onPress!(
+
+    if (item is CPListItem) {
+      item.onPress!(
         () => flutterToNativeModule(
           FCPChannelTypes.onFCPListItemSelectedComplete,
-          listItem.uniqueId,
+          item.uniqueId,
         ),
-        listItem,
+        item,
+      );
+    }
+  }
+
+  void processFCPListImageRowItemSelectedChannel(String elementId) {
+    final item = _carplayHelper.findCPListTemplateItem(
+      templates: templateHistory,
+      elementId: elementId,
+    );
+
+    if (item is CPListImageRowItem) {
+      item.onPress!(
+        () => flutterToNativeModule(
+          FCPChannelTypes.onFCPListImageRowItemSelectedComplete,
+          item.uniqueId,
+        ),
+        item,
+      );
+    }
+  }
+
+  void processFCPListImageRowItemElementSelectedChannel(
+    String elementId,
+    int index,
+  ) {
+    final item = _carplayHelper.findCPListTemplateItem(
+      templates: templateHistory,
+      elementId: elementId,
+    );
+
+    if (item is CPListImageRowItem) {
+      item.onItemPress!(
+        () => flutterToNativeModule(
+          FCPChannelTypes.onFCPListImageRowItemElementSelectedComplete,
+          item.uniqueId,
+        ),
+        item,
+        index,
       );
     }
   }
