@@ -1,3 +1,8 @@
+## 1.2.11
+
+- Fix `List<CPTemplate>` is not a subtype of `Iterable<CPListTemplate>` in `updateTemplates` (#92) (ty @EArminjon)
+- Fix failed cast on `updateCPListItem` when item is not in root template (#91) (ty @RedC4ke)
+
 ## 1.2.10
 
 - Add `@objc(FlutterCarPlaySceneDelegate)` annotation for iOS 26 compatibility (#87)
