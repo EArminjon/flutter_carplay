@@ -33,6 +33,15 @@ final class FCPListImageRowItemGridElement {
   }
 
   public func update(args: [String: Any]) {
+    if let newImage = args["image"] as? String {
+      self.image = newImage
+      let imageSource = newImage.toImageSource()
+      loadUIImageAsync(from: imageSource) { uiImage in
+        if let uiImage = uiImage {
+          self._super?.image = uiImage
+        }
+      }
+    }
   }
 }
 

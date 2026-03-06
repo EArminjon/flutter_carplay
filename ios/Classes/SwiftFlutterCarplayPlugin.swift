@@ -444,6 +444,14 @@ public class SwiftFlutterCarplayPlugin: NSObject, FlutterPlugin {
         }
       }
     }
+
+    for element in collected {
+      if element.elementId == elementId {
+        actionWhenFound(element)
+        return
+      }
+    }
+    NSLog("FCP: ImageRowItemElement not found with elementId: \(elementId)")
   }
 
   static public func getTemplateFromHistory(elementId: String) -> FCPTemplate? {
