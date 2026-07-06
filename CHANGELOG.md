@@ -1,3 +1,7 @@
+## 1.6.4 - 2026-07-06
+
+- Move the Android Auto message template docs into the Android Auto API usage section (#129) (ty @EArminjon)
+
 ## 1.6.3 - 2026-06-22
 
 - Fix Android Auto example release launches by allowing root template refresh before the car screen is attached (#127, #128) (ty @deandreamatias)
